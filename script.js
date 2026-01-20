@@ -155,6 +155,96 @@ if (rsvpButton) {
   });
 }
 
+const albumImages = Array.from(document.querySelectorAll(".album-grid img"));
+const lightbox = document.querySelector("#lightbox");
+const lightboxImage = document.querySelector("#lightboxImage");
+const lightboxPrev = document.querySelector("#lightboxPrev");
+const lightboxNext = document.querySelector("#lightboxNext");
+const lightboxClose = document.querySelector("#lightboxClose");
+const lightboxCount = document.querySelector("#lightboxCount");
+
+if (lightbox && lightboxImage && albumImages.length) {
+  let currentIndex = 0;
+  let touchStartX = 0;
+
+  const updateLightbox = () => {
+    const activeImage = albumImages[currentIndex];
+    lightboxImage.src = activeImage.src;
+    lightboxImage.alt = activeImage.alt || "확대된 사진";
+    if (lightboxCount) {
+      lightboxCount.textContent = `${currentIndex + 1} / ${albumImages.length}`;
+    }
+  };
+
+  const openLightbox = (index) => {
+    currentIndex = index;
+    updateLightbox();
+    lightbox.classList.add("is-open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("no-scroll");
+  };
+
+  const closeLightbox = () => {
+    lightbox.classList.remove("is-open");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("no-scroll");
+  };
+
+  const showNext = (delta) => {
+    currentIndex = (currentIndex + delta + albumImages.length) % albumImages.length;
+    updateLightbox();
+  };
+
+  albumImages.forEach((image, index) => {
+    image.addEventListener("click", () => openLightbox(index));
+  });
+
+  if (lightboxPrev && lightboxNext) {
+    const shouldDisable = albumImages.length < 2;
+    lightboxPrev.disabled = shouldDisable;
+    lightboxNext.disabled = shouldDisable;
+  }
+
+  lightboxPrev?.addEventListener("click", () => showNext(-1));
+  lightboxNext?.addEventListener("click", () => showNext(1));
+  lightboxClose?.addEventListener("click", closeLightbox);
+
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!lightbox.classList.contains("is-open")) return;
+    if (event.key === "Escape") closeLightbox();
+    if (event.key === "ArrowLeft") showNext(-1);
+    if (event.key === "ArrowRight") showNext(1);
+  });
+
+  lightbox.addEventListener(
+    "touchstart",
+    (event) => {
+      if (!lightbox.classList.contains("is-open")) return;
+      touchStartX = event.touches[0].clientX;
+    },
+    { passive: true }
+  );
+
+  lightbox.addEventListener(
+    "touchend",
+    (event) => {
+      if (!lightbox.classList.contains("is-open")) return;
+      const touchEndX = event.changedTouches[0].clientX;
+      const delta = touchEndX - touchStartX;
+      if (Math.abs(delta) > 40) {
+        showNext(delta > 0 ? -1 : 1);
+      }
+    },
+    { passive: true }
+  );
+}
+
 const isPhoneDevice = /iPhone|Android/i.test(navigator.userAgent);
 
 const wireContactButtons = (attribute, scheme) => {

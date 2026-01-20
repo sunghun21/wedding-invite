@@ -6,12 +6,12 @@
     <title>우성훈 ♥ 서지민 모바일 청첩장</title>
     <meta
       name="description"
-      content="우성훈과 서지민의 결혼식에 초대합니다. 2026년 6월 7일 일요일 오전 11시, 서울 구로구 경인로 662 디큐브시티 6층 그랜드볼룸 홀"
+      content="우성훈과 서지민의 결혼식에 초대합니다. 2026년 6월 7일 일요일 오전 11시 30분, 서울 구로구 경인로 662 디큐브시티 6층 그랜드볼룸 홀"
     />
     <meta property="og:title" content="우성훈 ♥ 서지민 모바일 청첩장" />
     <meta
       property="og:description"
-      content="2026년 6월 7일 일요일 오전 11시, 서울 구로구 경인로 662 디큐브시티 6층 그랜드볼룸 홀"
+      content="2026년 6월 7일 일요일 오전 11시 30분, 서울 구로구 경인로 662 디큐브시티 6층 그랜드볼룸 홀"
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="photo/032B0A5C-6AC4-4FE8-8A76-6F98BFB962FD.jpeg" />
@@ -38,7 +38,7 @@
           />
         </div>
         <div class="hero-summary">
-          <p class="hero-date">2026년 6월 7일 일요일 오전 11시</p>
+          <p class="hero-date">2026년 6월 7일 일요일 오전 11시 30분</p>
           <p class="hero-place">디큐브시티 6층 그랜드볼룸 홀</p>
         </div>
       </header>
@@ -63,7 +63,7 @@
         <p class="section-label">Schedule</p>
         <h2>예식 안내</h2>
         <div class="info-lines">
-          <p>2026년 6월 7일 일요일 오전 11시</p>
+          <p>2026년 6월 7일 일요일 오전 11시 30분</p>
           <p>디큐브시티 6층 그랜드볼룸 홀</p>
           <p class="muted">서울 구로구 경인로 662 디큐브시티</p>
         </div>
@@ -307,9 +307,32 @@
       <section class="section account reveal">
         <p class="section-label">Account</p>
         <h2>마음 전하실 곳</h2>
-        <div class="account-card">
-          <p>토스 100010015721</p>
-          <button class="ghost" type="button" data-copy="토스 100010015721">계좌번호 복사</button>
+        <div class="account-list">
+          <div class="account-card">
+            <p class="account-name">신랑 우성훈</p>
+            <p class="account-detail">토스 100010015721</p>
+            <button class="ghost" type="button" data-copy="토스 100010015721">계좌번호 복사</button>
+          </div>
+          <div class="account-card">
+            <p class="account-name">신랑측 아버지 우창영</p>
+            <p class="account-detail">은행명 · 계좌번호를 입력해주세요</p>
+            <button class="ghost" type="button" disabled>계좌번호 복사</button>
+          </div>
+          <div class="account-card">
+            <p class="account-name">신부 서지민</p>
+            <p class="account-detail">은행명 · 계좌번호를 입력해주세요</p>
+            <button class="ghost" type="button" disabled>계좌번호 복사</button>
+          </div>
+          <div class="account-card">
+            <p class="account-name">신부측 아버지 서용근</p>
+            <p class="account-detail">은행명 · 계좌번호를 입력해주세요</p>
+            <button class="ghost" type="button" disabled>계좌번호 복사</button>
+          </div>
+          <div class="account-card">
+            <p class="account-name">신부측 어머니 김희진</p>
+            <p class="account-detail">은행명 · 계좌번호를 입력해주세요</p>
+            <button class="ghost" type="button" disabled>계좌번호 복사</button>
+          </div>
         </div>
       </section>
 
@@ -319,6 +342,16 @@
         <p class="lead">소중한 걸음과 마음이 두 사람의 하루를 더욱 빛나게 합니다.</p>
       </section>
     </main>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="사진 확대 보기">
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">×</button>
+      <button class="lightbox-nav prev" id="lightboxPrev" type="button" aria-label="이전 사진">‹</button>
+      <div class="lightbox-frame">
+        <img id="lightboxImage" src="" alt="" />
+        <div class="lightbox-count" id="lightboxCount"></div>
+      </div>
+      <button class="lightbox-nav next" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
+    </div>
 
     <footer class="footer">
       <p>© 2026 우성훈 & 서지민</p>
