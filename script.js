@@ -37,30 +37,48 @@ if (bgm && musicToggle) {
     musicToggle.textContent = isPlaying ? "BGM ON" : "BGM";
   };
 
-  const attemptPlay = async () => {
-    if (!bgm.paused) return;
+  setMusicState(false);
+
+  const warmupPlay = async () => {
     try {
-      bgm.muted = false;
+      bgm.muted = true;
       await bgm.play();
-      setMusicState(true);
     } catch (error) {
-      console.warn("BGM play failed", error);
+      console.warn("BGM warmup failed", error);
     }
   };
 
-  setMusicState(false);
+  const enableSound = async () => {
+    try {
+      if (bgm.paused) {
+        await bgm.play();
+      }
+      bgm.muted = false;
+      setMusicState(true);
+    } catch (error) {
+      console.warn("BGM play failed", error);
+      musicToggle.textContent = "재생 불가";
+      setTimeout(() => {
+        setMusicState(false);
+      }, 2000);
+    }
+  };
+
+  const disableSound = () => {
+    bgm.pause();
+    setMusicState(false);
+  };
 
   window.addEventListener("load", () => {
-    attemptPlay();
+    warmupPlay();
   });
 
   musicToggle.addEventListener("click", async () => {
     try {
-      if (bgm.paused) {
-        await attemptPlay();
+      if (bgm.paused || bgm.muted) {
+        await enableSound();
       } else {
-        bgm.pause();
-        setMusicState(false);
+        disableSound();
       }
     } catch (error) {
       console.warn("BGM play failed", error);
@@ -72,7 +90,7 @@ if (bgm && musicToggle) {
   });
 
   const handleFirstInteraction = () => {
-    attemptPlay();
+    enableSound();
   };
 
   window.addEventListener("pointerdown", handleFirstInteraction, { once: true });
