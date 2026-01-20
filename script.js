@@ -14,6 +14,71 @@ const observer = new IntersectionObserver(
 
 revealTargets.forEach((target) => observer.observe(target));
 
+const daysLeftElement = document.querySelector("#daysLeft");
+if (daysLeftElement) {
+  const weddingDate = new Date(2026, 5, 7);
+  const today = new Date();
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const startOfWedding = new Date(
+    weddingDate.getFullYear(),
+    weddingDate.getMonth(),
+    weddingDate.getDate()
+  );
+  const diffDays = Math.ceil((startOfWedding - startOfToday) / (1000 * 60 * 60 * 24));
+  daysLeftElement.textContent = diffDays >= 0 ? `D-${diffDays}` : `D+${Math.abs(diffDays)}`;
+}
+
+const bgm = document.querySelector("#bgm");
+const musicToggle = document.querySelector("#musicToggle");
+if (bgm && musicToggle) {
+  const setMusicState = (isPlaying) => {
+    musicToggle.classList.toggle("is-playing", isPlaying);
+    musicToggle.setAttribute("aria-pressed", String(isPlaying));
+    musicToggle.textContent = isPlaying ? "BGM ON" : "BGM";
+  };
+
+  const attemptPlay = async () => {
+    if (!bgm.paused) return;
+    try {
+      bgm.muted = false;
+      await bgm.play();
+      setMusicState(true);
+    } catch (error) {
+      console.warn("BGM play failed", error);
+    }
+  };
+
+  setMusicState(false);
+
+  window.addEventListener("load", () => {
+    attemptPlay();
+  });
+
+  musicToggle.addEventListener("click", async () => {
+    try {
+      if (bgm.paused) {
+        await attemptPlay();
+      } else {
+        bgm.pause();
+        setMusicState(false);
+      }
+    } catch (error) {
+      console.warn("BGM play failed", error);
+      musicToggle.textContent = "재생 불가";
+      setTimeout(() => {
+        setMusicState(false);
+      }, 2000);
+    }
+  });
+
+  const handleFirstInteraction = () => {
+    attemptPlay();
+  };
+
+  window.addEventListener("pointerdown", handleFirstInteraction, { once: true });
+  window.addEventListener("touchstart", handleFirstInteraction, { once: true });
+}
+
 window.addEventListener("load", () => {
   document.body.classList.add("is-ready");
 });
@@ -37,7 +102,7 @@ if (shareButton) {
         await navigator.clipboard.writeText(shareData.url);
         shareButton.textContent = "링크가 복사되었습니다";
         setTimeout(() => {
-          shareButton.textContent = "모바일 청첩장 공유하기";
+          shareButton.textContent = "청첩장 공유하기";
         }, 2000);
       }
     } catch (error) {
@@ -69,6 +134,53 @@ if (rsvpButton) {
     setTimeout(() => {
       rsvpButton.textContent = "참석 여부 보내기";
     }, 2000);
+  });
+}
+
+const isPhoneDevice = /iPhone|Android/i.test(navigator.userAgent);
+
+const wireContactButtons = (attribute, scheme) => {
+  document.querySelectorAll(`[${attribute}]`).forEach((button) => {
+    const value = button.getAttribute(attribute);
+    if (!value) {
+      button.disabled = true;
+      return;
+    }
+
+    button.addEventListener("click", () => {
+      if (scheme === "tel" && !isPhoneDevice) {
+        alert("통화 연결은 휴대폰에서 가능합니다.");
+        return;
+      }
+      window.location.href = `${scheme}:${value}`;
+    });
+  });
+};
+
+wireContactButtons("data-tel", "tel");
+wireContactButtons("data-sms", "sms");
+
+const contactButton = document.querySelector("#contactButton");
+if (contactButton) {
+  const contactNumbers = Array.from(document.querySelectorAll("[data-tel]"))
+    .map((button) => button.getAttribute("data-tel"))
+    .filter(Boolean);
+
+  contactButton.addEventListener("click", () => {
+    if (!contactNumbers.length) {
+      contactButton.textContent = "연락처를 설정해주세요";
+      setTimeout(() => {
+        contactButton.textContent = "혼주에게 연락하기";
+      }, 2000);
+      return;
+    }
+
+    if (!isPhoneDevice) {
+      alert("통화 연결은 휴대폰에서 가능합니다.");
+      return;
+    }
+
+    window.location.href = `tel:${contactNumbers[0]}`;
   });
 }
 
